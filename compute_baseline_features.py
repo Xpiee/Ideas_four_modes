@@ -154,20 +154,47 @@ def baseline_extract_features_DPZ(ecg_baseline_file, eda_baseline_file, subject,
 
 ''' Baseline Features for Virage and MatbII'''
 
+# if __name__ == "__main__":
+#     # subj_id = 7
+#     # sess_id = 1
+#     baseline_path_virage = r"X:/RealTimeSegment/Driving Simulator/Raw/ECG_EDA_baseline/"
+#     baseline_path_matbii = r"X:/RealTimeSegment/MatbII/Raw/ECG_EDA_baseline/"
+#     savePath = "X:/RealTimeSegment/Driving Simulator/Extracted/ECG_EDA_baseline_oneline"
+
+#     listOfSubjects = os.listdir(baseline_path_virage)
+
+#     for subs in listOfSubjects:
+#         subBasePath = os.path.join(baseline_path_virage, subs)
+#         ecg_baseline_file = os.path.join(subBasePath, "ecg_baseline.csv")
+#         eda_baseline_file = os.path.join(subBasePath, "eda_baseline.csv")
+#         baseline_extract_features_virage_matbii(ecg_baseline_file, eda_baseline_file, subs, savePath)
+
+#     listOfSubjectsMatb = os.listdir(baseline_path_matbii)
+#     savePathMatbii = "X:/RealTimeSegment/MatbII/Extracted/ECG_EDA_baseline_oneline"
+
+#     for subs in listOfSubjectsMatb:
+#         subBasePath = os.path.join(baseline_path_matbii, subs)
+#         ecg_baseline_file = os.path.join(subBasePath, "ecg_baseline.csv")
+#         eda_baseline_file = os.path.join(subBasePath, "eda_baseline.csv")
+#         baseline_extract_features_virage_matbii(ecg_baseline_file, eda_baseline_file, subs, savePathMatbii)
+
+''' Baseline features for indiviual sessions in MAtbII and Virage '''
+
 if __name__ == "__main__":
-    # subj_id = 7
-    # sess_id = 1
-    baseline_path_virage = r"X:/RealTimeSegment/Driving Simulator/Raw/ECG_EDA_baseline/"
-    baseline_path_matbii = r"X:/RealTimeSegment/MatbII/Raw/ECG_EDA_baseline/"
+    baseline_path_virage = r"X:/Four modes baseline/Virage_Clipped_Baseline"
+    baseline_path_matbii = r"X:/Four modes baseline/MatB-II_Clipped_Baseline"
     savePath = "X:/RealTimeSegment/Driving Simulator/Extracted/ECG_EDA_baseline_oneline"
 
     listOfSubjects = os.listdir(baseline_path_virage)
 
     for subs in listOfSubjects:
         subBasePath = os.path.join(baseline_path_virage, subs)
-        ecg_baseline_file = os.path.join(subBasePath, "ecg_baseline.csv")
-        eda_baseline_file = os.path.join(subBasePath, "eda_baseline.csv")
-        baseline_extract_features_virage_matbii(ecg_baseline_file, eda_baseline_file, subs, savePath)
+        listOfSession = os.listdir(subBasePath)
+        for sess in listOfSession:
+            sessBasePath = os.path.join()
+            ecg_baseline_file = os.path.join(subBasePath, "ecg_baseline.csv")
+            eda_baseline_file = os.path.join(subBasePath, "eda_baseline.csv")
+            baseline_extract_features_virage_matbii(ecg_baseline_file, eda_baseline_file, subs, savePath)
 
     listOfSubjectsMatb = os.listdir(baseline_path_matbii)
     savePathMatbii = "X:/RealTimeSegment/MatbII/Extracted/ECG_EDA_baseline_oneline"
@@ -176,7 +203,7 @@ if __name__ == "__main__":
         subBasePath = os.path.join(baseline_path_matbii, subs)
         ecg_baseline_file = os.path.join(subBasePath, "ecg_baseline.csv")
         eda_baseline_file = os.path.join(subBasePath, "eda_baseline.csv")
-        baseline_extract_features_virage_matbii(ecg_baseline_file, eda_baseline_file, subs, savePathMatbii)
+        baseline_extract_features_virage_matbii(ecg_baseline_file, eda_baseline_file, subs, savePathMatbii)        
 
 # ''' Baseline Features for Dirk Prithila and Zunayed '''
 
