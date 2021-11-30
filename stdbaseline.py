@@ -2,30 +2,35 @@ import numpy as np
 import pandas as pd
 import os
 
-from pandas.core.indexes import base
-
 def number_of_segments(lengthBase, sampleRate, winSize):
     winSegment = winSize * sampleRate
     return lengthBase // winSegment
 
-def standardize_baseline_features(featBaseDF, columns, num_seg):
+def standardize_baseline_features(rawBaseSignalPath, baseFeaturePath, columns, sampleRate, winSize):
 
+    # Read raw Baseline Files for determining the length of the signal
+    rawBaseDF = pd.read_csv(rawBaseSignalPath)
+    lengthBase = len(rawBaseDF)
+
+    # get number of segments for this baseline signal
+    numOfSeg = number_of_segments(lengthBase, sampleRate, winSize)
 
     # Read base features for standardizing the columns based on numOfSeg
-    # featBaseDF = pd.read_csv(baseFeaturePath)
+    featBaseDF = pd.read_csv(baseFeaturePath)
 
     # standardize the columns by dividing the column values from numOfSeg 
-    featBaseDF[columns] = featBaseDF[columns] / num_seg
+    featBaseDF[columns] = featBaseDF[columns] / numOfSeg
 
     epsilon_ = 0.0001
     featBaseDF = featBaseDF.replace(0, value=epsilon_)
 
     return featBaseDF.copy()
 
-def checkZeroRound(arr):
-    sign_arr = np.sign(arr)
-    arr_rounded = np.ceil(np.abs(arr))
-    return sign_arr * arr_rounded
+def checkZeroRound(colAr):
+    signAr = np.sign(colAr)
+    rdAr = np.ceil(np.abs(colAr))
+    actualAr = signAr * rdAr
+    return actualAr
 
 if __name__ == '__main__':
 
