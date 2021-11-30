@@ -157,7 +157,7 @@ def sess_baseline_extract_features_virage_matbii(ecg_baseline_file, eda_baseline
         print("Feature extraction done!")
     else:
         print("Feature extraction already done!")
-        
+
 def baseline_extract_features_DPZ(ecg_baseline_file, eda_baseline_file, subject, sessID, savePath=None):
     print("Extracting Features.....")
     ecgDF =  pd.read_csv(ecg_baseline_file, header=None, skiprows=1, names=['Timestamp', 'ECG LL-RA CAL',  'ECG LA-RA CAL', 'dummy', 'ECG Vx-RL CAL'])
@@ -218,6 +218,7 @@ if __name__ == "__main__":
 
     dataName = ['MatB-II_Clipped_Baseline', 'Virage_Clipped_Baseline']
     for data in dataName:
+        print(data)
         baseline_path = f'X:/Four modes baseline/{data}/Raw/ECG_EDA_baseline'
         # baseline_path_virage = r"X:/Four modes baseline/Virage_Clipped_Baseline"
         # baseline_path_matbii = r"X:/Four modes baseline/MatB-II_Clipped_Baseline"
@@ -226,12 +227,14 @@ if __name__ == "__main__":
         listOfSubjects = os.listdir(baseline_path)
 
         for subs in listOfSubjects:
+            print(subs)
             subBasePath = os.path.join(baseline_path, subs)
             listOfSession = os.listdir(subBasePath)
             listOfSession = set([x.split('_')[1] for x in listOfSession])
             listOfSession = set([x.split('.')[0] for x in listOfSession])
 
             for sess in listOfSession:
+                print(sess)
                 ecg_baseline_file = os.path.join(subBasePath, f"ecg_{sess}.csv")
                 eda_baseline_file = os.path.join(subBasePath, f"eda_{sess}.csv")
                 sess_baseline_extract_features_virage_matbii(ecg_baseline_file, eda_baseline_file, subs, sess, savePath)
