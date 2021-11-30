@@ -83,7 +83,7 @@ if __name__ == '__main__':
             for sess in subDirs:
 
                 # raw file path
-                rawEcgDF = os.path.join(subPathRaw, f'ecg_{sess}.csv') ##################
+                rawEcgDF = os.path.join(subPathRaw, f'ecg_{sess}.csv')
                 rawEdaDF = os.path.join(subPathRaw, f'eda_{sess}.csv')
 
                 # read baseline features
