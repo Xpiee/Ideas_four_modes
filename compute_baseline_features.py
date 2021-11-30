@@ -1,4 +1,5 @@
 import collections
+from genericpath import exists
 import pandas as pd
 import numpy as np
 import os
@@ -138,21 +139,25 @@ def _baseline_extract_features_virage_matbii(ecg_baseline_file, eda_baseline_fil
 def sess_baseline_extract_features_virage_matbii(ecg_baseline_file, eda_baseline_file, subject, sess, savePath = None):
     print("Extracting Features.....")
 
-    ecgFeat, edaFeat = _baseline_extract_features_virage_matbii(ecg_baseline_file, eda_baseline_file)
-
     savePathSubject = os.path.join(savePath, subject)
-
     mk_dirs(savePathSubject)
 
-    ecgFeat.to_csv(os.path.join(savePathSubject, f"ecg_{sess}_baseline_features_oneline.csv"), index=False)
-    edaFeat.to_csv(os.path.join(savePathSubject, f"eda_{sess}_baseline_features_oneline.csv"), index=False)
+    ecgSave = os.path.join(savePathSubject, f"ecg_{sess}_baseline_features_oneline.csv")
+    edaSave = os.path.join(savePathSubject, f"eda_{sess}_baseline_features_oneline.csv")
 
-    featDF = pd.concat([ecgFeat, edaFeat], axis = 1)
+    if not (os.path.exists(ecgSave) and os.path.exists(edaSave)):
 
-    featDF.to_csv(os.path.join(savePath, subject, f"baseline_features_{sess}.csv"), index=False)
-    print("Feature extraction done!")    
+        ecgFeat, edaFeat = _baseline_extract_features_virage_matbii(ecg_baseline_file, eda_baseline_file)
+        ecgFeat.to_csv(os.path.join(savePathSubject, f"ecg_{sess}_baseline_features_oneline.csv"), index=False)
+        edaFeat.to_csv(os.path.join(savePathSubject, f"eda_{sess}_baseline_features_oneline.csv"), index=False)
 
+        featDF = pd.concat([ecgFeat, edaFeat], axis = 1)
 
+        featDF.to_csv(os.path.join(savePath, subject, f"baseline_features_{sess}.csv"), index=False)
+        print("Feature extraction done!")
+    else:
+        print("Feature extraction already done!")
+        
 def baseline_extract_features_DPZ(ecg_baseline_file, eda_baseline_file, subject, sessID, savePath=None):
     print("Extracting Features.....")
     ecgDF =  pd.read_csv(ecg_baseline_file, header=None, skiprows=1, names=['Timestamp', 'ECG LL-RA CAL',  'ECG LA-RA CAL', 'dummy', 'ECG Vx-RL CAL'])
@@ -161,20 +166,25 @@ def baseline_extract_features_DPZ(ecg_baseline_file, eda_baseline_file, subject,
     # edaDF.iloc[:, 1] = 1000. / edaDF.iloc[:, 1]
     edaDF['GSR Conductance CAL'] = 1000. / edaDF['GSR Conductance CAL'].values
     
-    ecgFeat = compute_ecg_eda_features.extract_ecg_features(ecgDF, ecg_sample_rt=512., dropCent=0.5)
-    edaFeat = compute_ecg_eda_features.extract_eda_features(edaDF, eda_sample_rt=128., dropCent=0.5)
-
     savePathSubject = os.path.join(savePath, subject)
-
     mk_dirs(savePathSubject)
 
-    ecgFeat.to_csv(os.path.join(savePathSubject, f"ecg_baseline_features_oneline_{sessID}.csv"), index=False)
-    edaFeat.to_csv(os.path.join(savePathSubject, f"eda_baseline_features_oneline_{sessID}.csv"), index=False)
+    ecgSave = os.path.join(savePathSubject, f"ecg_baseline_features_oneline_{sessID}.csv")
+    edaSave = os.path.join(savePathSubject, f"eda_baseline_features_oneline_{sessID}.csv")
 
-    featDF = pd.concat([ecgFeat, edaFeat], axis = 1)
+    if not (os.path.exists(ecgSave) and os.path.exists(edaSave)):
+        ecgFeat = compute_ecg_eda_features.extract_ecg_features(ecgDF, ecg_sample_rt=512., dropCent=0.5)
+        edaFeat = compute_ecg_eda_features.extract_eda_features(edaDF, eda_sample_rt=128., dropCent=0.5)
 
-    featDF.to_csv(os.path.join(savePath, subject, f"baseline_features_{sessID}.csv"), index=False) # changed sessID
-    print("Feature extraction done!")
+        ecgFeat.to_csv(os.path.join(savePathSubject, f"ecg_baseline_features_oneline_{sessID}.csv"), index=False)
+        edaFeat.to_csv(os.path.join(savePathSubject, f"eda_baseline_features_oneline_{sessID}.csv"), index=False)
+
+        featDF = pd.concat([ecgFeat, edaFeat], axis = 1)
+
+        featDF.to_csv(os.path.join(savePath, subject, f"baseline_features_{sessID}.csv"), index=False) # changed sessID
+        print("Feature extraction done!")
+    else:
+        print("Feature extraction already done!")
 
 ''' Baseline Features for Virage and MatbII'''
 
