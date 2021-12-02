@@ -27,6 +27,30 @@ SELECTCOLS = ['ecg_HRV_IQRNN', 'ecg_HRV_MadNN','ecg_HRV_MeanNN',
 'scrRecoveryTime_max', 'scrRecoveryTime_mean', 'scrRecoveryTime_median', 
 'scrRiseTime_max', 'scrRiseTime_mean', 'scrRiseTime_median'] + ['complexity', 'label', 'scaled label']
 
+ECG_SELECTCOLS = ['ecg_HRV_IQRNN', 'ecg_HRV_MadNN','ecg_HRV_MeanNN',
+'ecg_HRV_MedianNN','ecg_HRV_RMSSD', 'ecg_HRV_SD1', 'ecg_HRV_SD1SD2',
+'ecg_HRV_SDNN', 'ecg_HRV_SDSD', 'ecg_HRV_pNN20', 'ecg_HRV_pNN50', 'ecg_area_ts',
+'ecg_entropy_features', 'ecg_iqr_features', 'ecg_kurtosis_features', 'ecg_mad_ts',
+'ecg_mean_features', 'ecg_median_features', 'ecg_skew_features', 'ecg_sq_area_ts',
+'ecg_std_features', 'ecg_hr_max', 'ecg_hr_mean', 'ecg_hr_min', 'ecg_hr_std', 'ecg_nni_counter', 'ecg_nni_diff_max',
+'ecg_nni_diff_mean', 'ecg_nni_max', 'ecg_nni_mean', 'ecg_nni_min', 'ecg_hf_peak', 'ecg_ulf_abs',
+'ecg_vlf_abs', 'ecg_lf_abs', 'ecg_hf_abs', 'ecg_lf_norm', 'ecg_hf_norm', 'ecg_lf_hf',
+'ecg_tot_pwr',  'ecg_max_features', 'ecg_min_features'] + ['complexity', 'label', 'scaled label']
+
+EDA_SELECTCOLS = ['eda_area_ts', 'eda_entropy_features', 'eda_iqr_features',
+'eda_kurtosis_features', 'eda_mad_ts', 'eda_mean_features', 'eda_median_features',
+'eda_skew_features', 'eda_sq_area_ts', 'eda_std_features', 'ph_area_ts',
+'ph_entropy_features', 'ph_iqr_features', 'ph_kurtosis_features',
+'ph_mad_ts', 'ph_mean_features', 'ph_median_features','ph_skew_features',
+'ph_sq_area_ts', 'ph_std_features', 'ton_area_ts', 'ton_entropy_features',
+'ton_iqr_features', 'ton_kurtosis_features', 'ton_mad_ts', 'ton_mean_features',
+'ton_median_features', 'ton_skew_features', 'ton_sq_area_ts', 'ton_std_features', 'eda_max_features', 'eda_min_features',
+'scrAmpDF_max', 'scrAmpDF_mean', 'scrAmpDF_median', 'scrHgt_max', 'scrHgt_mean',
+'scrHgt_median', 'scrHgt_min', 'scrHgt_std', 'scrNumPeaks',
+'scrRecoveryTime_max', 'scrRecoveryTime_mean', 'scrRecoveryTime_median', 
+'scrRiseTime_max', 'scrRiseTime_mean', 'scrRiseTime_median'] + ['complexity', 'label', 'scaled label']
+
+
 SELECTIMPORTANT = ['ecg_HRV_MeanNN', 'ecg_HRV_MedianNN', 'ecg_area_ts',
        'ecg_entropy_features', 'ecg_iqr_features', 'ecg_kurtosis_features',
        'ecg_mad_ts', 'ecg_mean_features', 'ecg_median_features',
