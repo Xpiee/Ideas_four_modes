@@ -49,7 +49,7 @@ def process_matbII_data(main_folder, save_folder, ecg_cols, eda_cols, isMatlab=F
                     if "ecg_exp" in file:
                         sess_id = file[-5]
                         print('Working on file {}/ecg_level_{}.csv'.format(subj_id, sess_id))
-                        ecgDF = pd.read_csv(os.path.join(main_folder, folder, file), skiprows=1, skipinitialspace=True, names=ecg_cols)
+                        ecgDF = pd.read_csv(os.path.join(main_folder, folder, file), skipinitialspace=True) # skiprows=1, , names=ecg_cols 
                         # ecgDF.drop(columns='dummy', inplace=True)
                         ecg_len = ecgDF.shape[0]
                         ecg_step_size = 10000
@@ -57,11 +57,11 @@ def process_matbII_data(main_folder, save_folder, ecg_cols, eda_cols, isMatlab=F
                         firststamp = ecgDF['Timestamp'].iloc[0]
                         ecg_time = firststamp
                         curr_ind = 0
-                        while ecg_time + ecg_step_size <= ecgDF['Timestamp'].iloc[-1]:
+                        while ecg_time + ecg_step_size <= ecgDF['Timestamp'].iloc[-2]:
                             next_ind = (ecgDF['Timestamp'] > ecg_time + ecg_step_size).argmax() - 1
                             ecg_seg = ecgDF.iloc[curr_ind:next_ind, :].copy()
                             try:
-                                ecg_features = compute_ecg_eda_features.extract_ecg_features(ecg_seg.copy()) # Default sample rate: 512.
+                                ecg_features = compute_ecg_eda_features.extract_ecg_features_only(ecg_seg.copy()) # Default sample rate: 512.
                                 ecg_features['Timestamp'] = int(np.round((ecg_seg['Timestamp'].iloc[0] - firststamp) / 1000, -1))
                                 ecg_features['subj_id'] = subj_id
                                 ecg_features['sess_id'] = sess_id
@@ -76,7 +76,7 @@ def process_matbII_data(main_folder, save_folder, ecg_cols, eda_cols, isMatlab=F
                     if "eda_exp" in file:
                         sess_id = file[-5]
                         print('Working on file {}/eda_level_{}.csv'.format(subj_id, sess_id))
-                        edaDF = pd.read_csv(os.path.join(main_folder, folder, file), skiprows=1, skipinitialspace=True, names=eda_cols)
+                        edaDF = pd.read_csv(os.path.join(main_folder, folder, file), skipinitialspace=True) # skiprows=1, , names=eda_cols
                         if isMatlab:
                             edaDF['GSR Conductance CAL'] = 1000. / edaDF['GSR Conductance CAL'].values
                         eda_len = edaDF.shape[0]
@@ -85,11 +85,11 @@ def process_matbII_data(main_folder, save_folder, ecg_cols, eda_cols, isMatlab=F
                         firststamp = edaDF['Timestamp'].iloc[0]
                         eda_time = firststamp
                         curr_ind = 0
-                        while eda_time + eda_step_size <= edaDF['Timestamp'].iloc[-1]:
+                        while eda_time + eda_step_size <= edaDF['Timestamp'].iloc[-2]:
                             next_ind = (edaDF['Timestamp'] > eda_time + eda_step_size).argmax() - 1
                             eda_seg = edaDF.iloc[curr_ind:next_ind, :].copy()
                             try:
-                                eda_features = compute_ecg_eda_features.extract_eda_features(eda_seg.copy()) # default sample rate: 128.
+                                eda_features = compute_ecg_eda_features.extract_eda_features_only(eda_seg.copy()) # default sample rate: 128.
                                 eda_features['Timestamp'] = int(np.round((eda_seg['Timestamp'].iloc[0] - firststamp) / 1000, -1))
                                 eda_features['subj_id'] = subj_id
                                 eda_features['sess_id'] = sess_id
@@ -127,7 +127,6 @@ def ecg_extract_window_features(ecgDF, subj_id, sess_id=1, sRate=512., savePath=
         ecg_all_features = pd.concat(ecg_seg_features, axis=0)
         ecg_all_features.to_csv(os.path.join(savePath, 'ecg_featurs_{}.csv'.format(sess_id)), index=False)
 
-
 def eda_extract_window_features(edaDF, subj_id, sess_id=1, isDPZ=False, sRate=128., savePath=None):
     if isDPZ:
         edaDF['GSR Conductance CAL'] = 1000. / edaDF['GSR Conductance CAL'].values
@@ -158,17 +157,21 @@ def eda_extract_window_features(edaDF, subj_id, sess_id=1, isDPZ=False, sRate=12
 if __name__ == '__main__':
 
     # isDPZ = False # True if extracting features for DPZ
-    isDPZ = True # True if extracting features for DPZ
+    isDPZ = False # True if extracting features for DPZ
 
     if isDPZ == False:
         ecg_cols = ['Timestamp', 'ECG LL-RA CAL',
                     'ECG LA-RA CAL', 'ECG Vx-RL CAL']
         eda_cols = ['Timestamp', 'GSR Conductance CAL']                
             
-        main_folder = "X:/RealTimeSegment/MatbII/Raw/ECG_EDA"
-        savePath = 'X:/RealTimeSegment/MatbII/Extracted'
+        # main_folder = "X:/Four Modes/Matbii/Filtered/ECG_EDA"
+        # savePath = 'X:/Four Modes/Matbii/Extracted'
+
+        main_folder = "X:/Four Modes/Matbii/Filtered/Base2_ECG_EDA"
+        savePath = 'X:/Four Modes/Matbii/Extracted'
+
         mk_dirs(savePath)
-        save_folder = os.path.join(savePath, 'ECG_EDA_Features')
+        save_folder = os.path.join(savePath, 'ECG_EDA_Base2_Features')
 
         process_matbII_data(main_folder, save_folder, ecg_cols, eda_cols, isDPZ)
 

@@ -78,6 +78,20 @@ def clean_ecg_signal(ecgDF, ecg_sample_rt = 512., dropCent = 0.05):
 
     return df_ecg_new.copy()
 
+
+def extract_ecg_features_only(ecgDF, ecg_sample_rt = 512., dropCent = 0.05):
+
+    # Extracting Features from ECG signal
+    ecgFeat = _ecg_features(ecgDF.copy(), ecg_sample_rt)
+
+    return ecgFeat.copy()
+
+def extract_eda_features_only(edaDF, eda_sample_rt=128., dropCent = 0.05):
+
+    edaFeat = _eda_features(edaDF.copy(), eda_sample_rt)
+
+    return edaFeat.copy()    
+
 def extract_ecg_features(ecgDF, ecg_sample_rt = 512., dropCent = 0.05):
     rd_cols = ['Timestamp', 'ECG LL-RA CAL',
             'ECG LA-RA CAL', 'ECG Vx-RL CAL']

@@ -128,11 +128,11 @@ def baseline_extract_features_virage_matbii(ecg_baseline_file, eda_baseline_file
 def _baseline_extract_features_virage_matbii(ecg_baseline_file, eda_baseline_file):
     # ecg_baseline_file = os.path.join(baseline_path, f"baseline_ecg_{baseline_sess_id}.csv")
     # eda_baseline_file = os.path.join(baseline_path, f"baseline_eda_{baseline_sess_id}.csv")
-    ecgDF =  pd.read_csv(ecg_baseline_file, header=None, skiprows=1, names=['Timestamp', 'ECG LL-RA CAL',  'ECG LA-RA CAL', 'ECG Vx-RL CAL'])
-    edaDF = pd.read_csv(eda_baseline_file, header=None, skiprows=1, names=['Timestamp', 'GSR Conductance CAL'])
+    ecgDF = pd.read_csv(ecg_baseline_file) # , header=None , skiprows=1, names=['Timestamp', 'ECG LL-RA CAL',  'ECG LA-RA CAL', 'ECG Vx-RL CAL']
+    edaDF = pd.read_csv(eda_baseline_file) # , header=None , skiprows=1, names=['Timestamp', 'GSR Conductance CAL']
 
-    ecgFeat = compute_ecg_eda_features.extract_ecg_features(ecgDF, ecg_sample_rt=512., dropCent=0.5)
-    edaFeat = compute_ecg_eda_features.extract_eda_features(edaDF, eda_sample_rt=128., dropCent=0.5)
+    ecgFeat = compute_ecg_eda_features.extract_ecg_features_only(ecgDF, ecg_sample_rt=512., dropCent=0.5)
+    edaFeat = compute_ecg_eda_features.extract_eda_features_only(edaDF, eda_sample_rt=128., dropCent=0.5)
 
     return ecgFeat.copy(), edaFeat.copy()
 
@@ -216,13 +216,16 @@ def baseline_extract_features_DPZ(ecg_baseline_file, eda_baseline_file, subject,
 
 if __name__ == "__main__":
 
-    dataName = ['MatB-II_Clipped_Baseline', 'Virage_Clipped_Baseline']
+    # dataName = ['MatB-II_Clipped_Baseline', 'Virage_Clipped_Baseline']
+    dataName = ['Matbii', 'Virage']
+
     for data in dataName:
         print(data)
-        baseline_path = f'X:/Four modes baseline/{data}/Raw/ECG_EDA_baseline'
+        baseline_path = f'X:/Four Modes/{data}/Filtered/Base3_ECG_EDA'
         # baseline_path_virage = r"X:/Four modes baseline/Virage_Clipped_Baseline"
         # baseline_path_matbii = r"X:/Four modes baseline/MatB-II_Clipped_Baseline"
-        savePath = f"X:/Four modes baseline/{data}/Extracted/ECG_EDA_baseline_oneline"
+        # savePath = f"X:/Four modes baseline/{data}/Extracted/ECG_EDA_baseline_oneline"
+        savePath = f"X:/Four Modes/{data}/Extracted/ECG_EDA_Base3_oneline"
 
         listOfSubjects = os.listdir(baseline_path)
 

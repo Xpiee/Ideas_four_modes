@@ -41,8 +41,11 @@ if __name__ == '__main__':
 
     ### provide root path for baseline oneline features ###
 
-    dataName = {'MatbII': 'MatB-II_Clipped_Baseline',
-                'Driving Simulator': 'Virage_Clipped_Baseline'}
+    # dataName = {'MatbII': 'MatB-II_Clipped_Baseline',
+    #             'Driving Simulator': 'Virage_Clipped_Baseline'}
+
+    dataName = {'MatbII': 'Matbii',
+                'Driving Simulator': 'Virage'}
 
     for key, data in dataName.items():
 
@@ -50,55 +53,57 @@ if __name__ == '__main__':
         # saveBaseRPath = "X:/RealTimeSegment/Driving Simulator/Extracted/ECG_EDA_baseline_oneline_std"
         # root path for raw baseline signal
         # rawRPath = "X:/RealTimeSegment/Driving Simulator/Raw/ECG_EDA_baseline"
+        bases = ['Base2', 'Base3']
 
-        baseRPath = f"X:/Four modes baseline/{data}/Extracted/ECG_EDA_baseline_oneline"
-        saveBaseRPath = f"X:/Four modes baseline/{data}/Extracted/ECG_EDA_baseline_oneline_std"
+        for bs in bases:
+            baseRPath = f"X:/Four Modes/{data}/Extracted/ECG_EDA_{bs}_oneline"
+            saveBaseRPath = f"X:/Four Modes/{data}/Extracted/ECG_EDA_{bs}_oneline_std"
 
-        # root path for raw baseline signal
-        rawRPath = f"X:/Four modes baseline/{data}/Raw/ECG_EDA_baseline"
+            # root path for raw baseline signal
+            rawRPath = f"X:/Four Modes/{data}/Filtered/{bs}_ECG_EDA"
 
-        if not os.path.exists(saveBaseRPath):
-            os.makedirs(saveBaseRPath)
+            if not os.path.exists(saveBaseRPath):
+                os.makedirs(saveBaseRPath)
 
-        subIDs = os.listdir(baseRPath)
+            subIDs = os.listdir(baseRPath)
 
-        eda_sample_rate = 128.
-        ecg_sample_rate = 512.
-        winsize = 10
-        
-        ecgColumns = ['ecg_sq_area_ts', 'ecg_nni_counter', 'ecg_ulf_abs',
-        'ecg_vlf_abs', 'ecg_lf_abs', 'ecg_hf_abs', 'ecg_tot_pwr']
-        edaColumns = ['eda_area_ts', 'eda_sq_area_ts', 'ton_sq_area_ts', 'scrNumPeaks']
-
-        for sub in subIDs:
-            subPath = os.path.join(baseRPath, sub)
-            subDirs = os.listdir(subPath)
-
-            subDirs = [x for x in subDirs if '_baseline_features_' in x]
-            subDirs = set([x.split('_')[1] for x in subDirs])
+            eda_sample_rate = 128.
+            ecg_sample_rate = 512.
+            winsize = 10
             
-            subPathRaw = os.path.join(rawRPath, sub)
-            subPathFeat = os.path.join(baseRPath, sub)
+            ecgColumns = ['ecg_sq_area_ts', 'ecg_nni_counter', 'ecg_ulf_abs',
+            'ecg_vlf_abs', 'ecg_lf_abs', 'ecg_hf_abs', 'ecg_tot_pwr']
+            edaColumns = ['eda_area_ts', 'eda_sq_area_ts', 'ton_sq_area_ts', 'scrNumPeaks']
 
-            for sess in subDirs:
+            for sub in subIDs:
+                subPath = os.path.join(baseRPath, sub)
+                subDirs = os.listdir(subPath)
 
-                # raw file path
-                rawEcgDF = os.path.join(subPathRaw, f'ecg_{sess}.csv')
-                rawEdaDF = os.path.join(subPathRaw, f'eda_{sess}.csv')
+                subDirs = [x for x in subDirs if '_baseline_features_' in x]
+                subDirs = set([x.split('_')[1] for x in subDirs])
+                
+                subPathRaw = os.path.join(rawRPath, sub)
+                subPathFeat = os.path.join(baseRPath, sub)
 
-                # read baseline features
-                oneEcgDF = os.path.join(subPathFeat, f'ecg_{sess}_baseline_features_oneline.csv')
-                oneEdaDF = os.path.join(subPathFeat, f'eda_{sess}_baseline_features_oneline.csv')
+                for sess in subDirs:
 
-                ecgDF = standardize_baseline_features(rawEcgDF, oneEcgDF, ecgColumns , ecg_sample_rate, 10)
-                edaDF = standardize_baseline_features(rawEdaDF, oneEdaDF, edaColumns , eda_sample_rate, 10)
+                    # raw file path
+                    rawEcgDF = os.path.join(subPathRaw, f'ecg_{sess}.csv')
+                    rawEdaDF = os.path.join(subPathRaw, f'eda_{sess}.csv')
 
-                ecgDF['ecg_nni_counter'] = checkZeroRound(ecgDF['ecg_nni_counter'].values)
-                edaDF['scrNumPeaks'] = checkZeroRound(edaDF['scrNumPeaks'].values)
+                    # read baseline features
+                    oneEcgDF = os.path.join(subPathFeat, f'ecg_{sess}_baseline_features_oneline.csv')
+                    oneEdaDF = os.path.join(subPathFeat, f'eda_{sess}_baseline_features_oneline.csv')
 
-                saveBaseRPathSub = os.path.join(saveBaseRPath, sub)
+                    ecgDF = standardize_baseline_features(rawEcgDF, oneEcgDF, ecgColumns , ecg_sample_rate, 10)
+                    edaDF = standardize_baseline_features(rawEdaDF, oneEdaDF, edaColumns , eda_sample_rate, 10)
 
-                if not os.path.exists(saveBaseRPathSub):
-                    os.makedirs(saveBaseRPathSub)
-                ecgDF.to_csv(os.path.join(saveBaseRPathSub, f'ecg_{sess}_baseline_features_oneline.csv'), index=False)
-                edaDF.to_csv(os.path.join(saveBaseRPathSub, f'eda_{sess}_baseline_features_oneline.csv'), index=False)
+                    ecgDF['ecg_nni_counter'] = checkZeroRound(ecgDF['ecg_nni_counter'].values)
+                    edaDF['scrNumPeaks'] = checkZeroRound(edaDF['scrNumPeaks'].values)
+
+                    saveBaseRPathSub = os.path.join(saveBaseRPath, sub)
+
+                    if not os.path.exists(saveBaseRPathSub):
+                        os.makedirs(saveBaseRPathSub)
+                    ecgDF.to_csv(os.path.join(saveBaseRPathSub, f'ecg_{sess}_baseline_features_oneline.csv'), index=False)
+                    edaDF.to_csv(os.path.join(saveBaseRPathSub, f'eda_{sess}_baseline_features_oneline.csv'), index=False)
